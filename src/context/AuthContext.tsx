@@ -22,12 +22,6 @@ interface AuthProviderProps {
 export function AuthProvider({ children }: AuthProviderProps) {
   const auth = useAuth();
 
-  useEffect(() => {
-    if (auth.isAuthenticated && !auth.user) {
-      auth.fetchCurrentUser();
-    }
-  }, []);
-
   return (
     <AuthContext.Provider value={auth}>
       {children}

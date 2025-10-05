@@ -13,10 +13,11 @@ export function useCart() {
     setIsLoading(true);
     try {
       const response = await cartApi.fetchCart();
-      setItems(response.items);
-      setTotal(response.total);
+      setItems(response.items || []);
+      setTotal(response.total || 0);
     } catch (error) {
-      showErrorToast(error);
+      setItems([]);
+      setTotal(0);
     } finally {
       setIsLoading(false);
     }

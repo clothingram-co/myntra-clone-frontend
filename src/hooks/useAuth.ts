@@ -74,10 +74,7 @@ export function useAuth() {
       setUser(currentUser);
       storage.set(USER_KEY, currentUser);
     } catch (error) {
-      setUser(null);
-      setIsAuthenticated(false);
-      storage.remove(USER_KEY);
-      storage.remove(AUTH_TOKEN_KEY);
+
     } finally {
       setIsLoading(false);
     }

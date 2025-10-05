@@ -23,10 +23,6 @@ interface CartProviderProps {
 export function CartProvider({ children }: CartProviderProps) {
   const cart = useCart();
 
-  useEffect(() => {
-    cart.fetchCart();
-  }, []);
-
   return (
     <CartContext.Provider value={cart}>
       {children}
