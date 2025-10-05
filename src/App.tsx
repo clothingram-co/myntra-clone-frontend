@@ -8,11 +8,12 @@ import { ProductDetailPage } from "./pages/ProductDetailPage";
 import { CartPage } from "./pages/CartPage";
 import { CheckoutPage } from "./pages/CheckoutPage";
 import { ProfilePage } from "./pages/ProfilePage";
+import { LoginPage } from "./pages/LoginPage";
 import { CartItem } from "./data/mockData";
 import { toast } from "sonner";
 import { useAuthContext } from "./context/AuthContext";
 
-type Page = 'home' | 'category' | 'product' | 'cart' | 'checkout' | 'profile';
+type Page = 'home' | 'category' | 'product' | 'cart' | 'checkout' | 'profile' | 'login';
 
 interface NavigationData {
   productId?: string;
@@ -178,6 +179,13 @@ export default function App() {
             onWishlistClick={handleWishlistClick}
           />
         );
+
+      case 'login':
+        return (
+          <LoginPage
+            onNavigate={handleNavigate}
+          />
+        );
       
       default:
         return (
@@ -193,11 +201,13 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 flex flex-col transition-colors">
-      <Navbar
-        currentPage={currentPage}
-        onNavigate={handleNavigate}
-        cartItemsCount={cartItems.reduce((total, item) => total + item.quantity, 0)}
-      />
+      {currentPage !== 'login' && (
+        <Navbar
+          currentPage={currentPage}
+          onNavigate={handleNavigate}
+          cartItemsCount={cartItems.reduce((total, item) => total + item.quantity, 0)}
+        />
+      )}
       <main className="flex-1">
         <AnimatePresence mode="wait">
           <motion.div

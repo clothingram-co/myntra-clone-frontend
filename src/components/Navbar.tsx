@@ -2,13 +2,10 @@ import { useState, useEffect, useRef } from "react";
 import { Search, ShoppingBag, User, Heart, Menu, Moon, Sun, LogOut } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
-import { Label } from "./ui/label";
 import { productsApi } from "../services/api/products";
 import { Product } from "../types/product";
 import { useTheme } from "../context/ThemeContext";
 import { useAuthContext } from "../context/AuthContext";
-import { toast } from "sonner";
 
 interface NavbarProps {
   currentPage: string;
@@ -21,14 +18,9 @@ export function Navbar({ currentPage, onNavigate, cartItemsCount }: NavbarProps)
   const [searchResults, setSearchResults] = useState<Product[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [showResults, setShowResults] = useState(false);
-  const [showLoginDialog, setShowLoginDialog] = useState(false);
-  const [isLoginMode, setIsLoginMode] = useState(true);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
   const searchRef = useRef<HTMLDivElement>(null);
   const { theme, toggleTheme } = useTheme();
-  const { isAuthenticated, user, login, register, logout, isLoading } = useAuthContext();
+  const { isAuthenticated, logout } = useAuthContext();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -69,23 +61,6 @@ export function Navbar({ currentPage, onNavigate, cartItemsCount }: NavbarProps)
     onNavigate('product');
     setShowResults(false);
     setSearchQuery("");
-  };
-
-  const handleAuth = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      if (isLoginMode) {
-        await login({ email, password });
-      } else {
-        await register({ email, password, name });
-      }
-      setShowLoginDialog(false);
-      setEmail("");
-      setPassword("");
-      setName("");
-    } catch (error) {
-      // Error is already handled in the hook
-    }
   };
 
   const handleLogout = async () => {
@@ -223,82 +198,15 @@ export function Navbar({ currentPage, onNavigate, cartItemsCount }: NavbarProps)
                 </Button>
               </>
             ) : (
-              <Dialog open={showLoginDialog} onOpenChange={setShowLoginDialog}>
-                <DialogTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="hidden md:flex items-center space-x-1 text-gray-900 dark:text-gray-100 hover:text-[#FF3F6C]"
-                  >
-                    <User className="h-4 w-4" />
-                    <span>Login</span>
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-md">
-                  <DialogHeader>
-                    <DialogTitle>{isLoginMode ? 'Login' : 'Register'}</DialogTitle>
-                    <DialogDescription>
-                      {isLoginMode
-                        ? 'Enter your credentials to access your account'
-                        : 'Create a new account to get started'}
-                    </DialogDescription>
-                  </DialogHeader>
-                  <form onSubmit={handleAuth} className="space-y-4">
-                    {!isLoginMode && (
-                      <div className="space-y-2">
-                        <Label htmlFor="name">Name</Label>
-                        <Input
-                          id="name"
-                          type="text"
-                          placeholder="Enter your name"
-                          value={name}
-                          onChange={(e) => setName(e.target.value)}
-                          required={!isLoginMode}
-                        />
-                      </div>
-                    )}
-                    <div className="space-y-2">
-                      <Label htmlFor="email">Email</Label>
-                      <Input
-                        id="email"
-                        type="email"
-                        placeholder="Enter your email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="password">Password</Label>
-                      <Input
-                        id="password"
-                        type="password"
-                        placeholder="Enter your password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                      />
-                    </div>
-                    <Button
-                      type="submit"
-                      className="w-full bg-[#FF3F6C] hover:bg-[#FF3F6C]/90 text-white"
-                      disabled={isLoading}
-                    >
-                      {isLoading ? 'Please wait...' : isLoginMode ? 'Login' : 'Register'}
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="link"
-                      className="w-full"
-                      onClick={() => setIsLoginMode(!isLoginMode)}
-                    >
-                      {isLoginMode
-                        ? "Don't have an account? Register"
-                        : 'Already have an account? Login'}
-                    </Button>
-                  </form>
-                </DialogContent>
-              </Dialog>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => onNavigate('login')}
+                className="hidden md:flex items-center space-x-1 text-gray-900 dark:text-gray-100 hover:text-[#FF3F6C]"
+              >
+                <User className="h-4 w-4" />
+                <span>Login</span>
+              </Button>
             )}
 
             <Button
