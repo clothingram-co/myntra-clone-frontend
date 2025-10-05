@@ -175,7 +175,7 @@ export function Footer() {
               {" "}for all who lead with style
             </p>
             <p className="text-white/60 text-sm">
-              © 2024 StyleHub. All rights reserved.
+              © 2024 clothingram. All rights reserved.
             </p>
           </div>
 

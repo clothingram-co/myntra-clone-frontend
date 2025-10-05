@@ -10,6 +10,7 @@ import { CheckoutPage } from "./pages/CheckoutPage";
 import { ProfilePage } from "./pages/ProfilePage";
 import { CartItem } from "./data/mockData";
 import { toast } from "sonner";
+import { useAuthContext } from "./context/AuthContext";
 
 type Page = 'home' | 'category' | 'product' | 'cart' | 'checkout' | 'profile';
 
@@ -35,8 +36,13 @@ export default function App() {
   const [navigationData, setNavigationData] = useState<NavigationData>({});
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [wishlistedItems, setWishlistedItems] = useState<string[]>([]);
+  const { isAuthenticated } = useAuthContext();
 
   const handleNavigate = (page: Page, data?: NavigationData) => {
+    if (page === 'profile' && !isAuthenticated) {
+      toast.error('Please login to access your profile');
+      return;
+    }
     setCurrentPage(page);
     if (data) {
       setNavigationData(data);
